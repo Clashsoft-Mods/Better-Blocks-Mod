@@ -1,7 +1,8 @@
-package clashsoft.mods.betterblocks;
+package clashsoft.mods.betterblocks.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSponge;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 
 public class BlockSponge2 extends BlockSponge
@@ -27,15 +28,19 @@ public class BlockSponge2 extends BlockSponge
 	
 	public void replaceWater(World world, int x, int y, int z)
 	{
-		for (int x1 = x - 2; x1 <= x + 2; x1++)
+		if (!world.isRemote)
 		{
-			for (int y1 = y - 2; y1 <= y + 2; y1++)
+			for (int x1 = x - 2; x1 <= x + 2; x1++)
 			{
-				for (int z1 = z - 2; z1 <= z + 2; z1++)
+				for (int y1 = y - 2; y1 <= y + 2; y1++)
 				{
-					int blockID = world.getBlockId(x, y, z);
-					if (Block.blocksList[blockID] != null && Block.blocksList[blockID].blockMaterial.isLiquid())
-						world.setBlockToAir(x1, y1, z1);
+					for (int z1 = z - 2; z1 <= z + 2; z1++)
+					{
+						int blockID = world.getBlockId(x1, y1, z1);
+						Block block = Block.blocksList[blockID];
+						if (block != null && (block.blockMaterial.isLiquid() || block.blockMaterial == Material.water || block.blockMaterial == Material.lava))
+							world.setBlock(x1, y1, z1, 0, 0, 2);
+					}
 				}
 			}
 		}

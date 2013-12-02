@@ -2,6 +2,7 @@ package clashsoft.mods.betterblocks;
 
 import clashsoft.mods.betterblocks.block.BlockMobSpawner2;
 import clashsoft.mods.betterblocks.block.BlockPistonBase2;
+import clashsoft.mods.betterblocks.block.BlockSponge2;
 import clashsoft.mods.betterblocks.common.BBCommonProxy;
 import clashsoft.mods.betterblocks.item.ItemBlockMobSpawner2;
 import clashsoft.mods.betterblocks.tileentity.TileEntityPiston2;
