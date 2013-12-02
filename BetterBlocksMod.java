@@ -38,6 +38,7 @@ public class BetterBlocksMod
 	public static BlockMobSpawner2	spawner2;
 	public static BlockPistonBase2	pistonBase2;
 	public static BlockPistonBase2	pistonStickyBase2;
+	public static BlockSponge2		sponge2;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -56,13 +57,16 @@ public class BetterBlocksMod
 		NetworkRegistry.instance().registerGuiHandler(instance, proxy);
 		
 		Block.blocksList[Block.mobSpawner.blockID] = null;
-		spawner2 = (BlockMobSpawner2) new BlockMobSpawner2(Block.mobSpawner.blockID).setHardness(5.0F).setStepSound(Block.soundMetalFootstep).setUnlocalizedName("mobSpawner").setTextureName("mob_spawner").setCreativeTab(CreativeTabs.tabBlock);
+		spawner2 = (BlockMobSpawner2) new BlockMobSpawner2(Block.mobSpawner.blockID).setUnlocalizedName("mobSpawner").setTextureName("mob_spawner").setHardness(5.0F).setStepSound(Block.soundMetalFootstep).setCreativeTab(CreativeTabs.tabBlock);
 		
 		Block.blocksList[Block.pistonBase.blockID] = null;
 		pistonBase2 = (BlockPistonBase2) new BlockPistonBase2(Block.pistonBase.blockID, false).setUnlocalizedName("pistonBase");
 		
 		Block.blocksList[Block.pistonStickyBase.blockID] = null;
 		pistonStickyBase2 = (BlockPistonBase2) new BlockPistonBase2(Block.pistonStickyBase.blockID, true).setUnlocalizedName("pistonStickyBase");
+		
+		Block.blocksList[Block.sponge.blockID] = null;
+		sponge2 = (BlockSponge2) new BlockSponge2(Block.sponge.blockID).setUnlocalizedName("sponge").setTextureName("sponge").setHardness(0.6F).setStepSound(Block.soundGrassFootstep);
 		
 		GameRegistry.registerTileEntity(TileEntityPiston2.class, "Piston2");
 		
@@ -71,6 +75,8 @@ public class BetterBlocksMod
 		
 		if (spawnerCrafting)
 			addSpawnerRecipes();
+		
+		GameRegistry.addRecipe(new ItemStack(Block.sponge), "wsw", "sws", "wsw", 'w', new ItemStack(Block.cloth, 1, 4), 's', Item.silk);
 	}
 	
 	public void addSpawnerRecipes()
