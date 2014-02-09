@@ -5,12 +5,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockMobSpawner;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityEggInfo;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityList.EntityEggInfo;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
@@ -22,9 +24,8 @@ public class BlockMobSpawner2 extends BlockMobSpawner
 {
 	public TileEntityMobSpawner	temp	= null;
 	
-	public BlockMobSpawner2(int par1)
+	public BlockMobSpawner2()
 	{
-		super(par1);
 		this.disableStats();
 	}
 	
@@ -48,11 +49,11 @@ public class BlockMobSpawner2 extends BlockMobSpawner
 	}
 	
 	@Override
-	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	public void getSubBlocks(Item item, CreativeTabs tab, List list)
 	{
 		for (String s : getSpawnableEntityNames())
 		{
-			par3List.add(getSpawnerStack(s));
+			list.add(this.getSpawnerStack(s));
 		}
 	}
 	
@@ -63,50 +64,52 @@ public class BlockMobSpawner2 extends BlockMobSpawner
 	}
 	
 	@Override
-	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
 	{
 		return new ArrayList<ItemStack>();
 	}
 	
 	@Override
-	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
+	public void breakBlock(World world, int x, int y, int z, Block oldBlock, int oldMetadata)
 	{
-		temp = (TileEntityMobSpawner) par1World.getBlockTileEntity(par2, par3, par4);
-		par1World.removeBlockTileEntity(par2, par3, par4);
+		this.temp = (TileEntityMobSpawner) world.getTileEntity(x, y, z);
+		super.breakBlock(world, x, y, z, oldBlock, oldMetadata);
 	}
 	
 	@Override
-	public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6)
+	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int metadata)
 	{
-		par2EntityPlayer.addStat(StatList.mineBlockStatArray[this.blockID], 1);
-		par2EntityPlayer.addExhaustion(0.025F);
+		player.addStat(StatList.mineBlockStatArray[getIdFromBlock(this)], 1);
+		player.addExhaustion(0.025F);
 		
-		if (!par2EntityPlayer.capabilities.isCreativeMode)
+		if (!player.capabilities.isCreativeMode)
 		{
-			if (EnchantmentHelper.getSilkTouchModifier(par2EntityPlayer))
+			if (EnchantmentHelper.getSilkTouchModifier(player))
 			{
 				ItemStack itemstack = new ItemStack(this, 1, 0);
 				
-				if (temp == null)
-					temp = (TileEntityMobSpawner) par1World.getBlockTileEntity(par3, par4, par5);
-				
-				if (temp != null)
+				if (this.temp == null)
 				{
-					itemstack = getSpawnerStack(temp);
+					this.temp = (TileEntityMobSpawner) world.getTileEntity(x, y, z);
+				}
+				
+				if (this.temp != null)
+				{
+					itemstack = this.getSpawnerStack(this.temp);
 					
 					if (itemstack != null)
 					{
-						this.dropBlockAsItem_do(par1World, par3, par4, par5, itemstack);
+						this.dropBlockAsItem(world, x, y, z, itemstack);
 					}
-					temp = null;
+					this.temp = null;
 				}
-				par1World.removeBlockTileEntity(par3, par4, par5);
+				world.removeTileEntity(x, y, z);
 			}
 			else
 			{
-				super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
-				int xp = 15 + par1World.rand.nextInt(15) + par1World.rand.nextInt(15);
-				this.dropXpOnBlockBreak(par1World, par3, par4, par5, xp);
+				super.harvestBlock(world, player, x, y, z, metadata);
+				int xp = 15 + world.rand.nextInt(15) + world.rand.nextInt(15);
+				this.dropXpOnBlockBreak(world, x, y, z, xp);
 			}
 		}
 	}
@@ -114,7 +117,7 @@ public class BlockMobSpawner2 extends BlockMobSpawner
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
 	{
-		return getSpawnerStack((TileEntityMobSpawner) world.getBlockTileEntity(x, y, z));
+		return this.getSpawnerStack((TileEntityMobSpawner) world.getTileEntity(x, y, z));
 	}
 	
 	public ItemStack getSpawnerStack(TileEntityMobSpawner spawner)
@@ -132,15 +135,16 @@ public class BlockMobSpawner2 extends BlockMobSpawner
 	public ItemStack getSpawnerStack(String entityname)
 	{
 		TileEntityMobSpawner spawner = new TileEntityMobSpawner();
-		spawner.getSpawnerLogic().setMobID(entityname);
-		return getSpawnerStack(spawner);
+		spawner.func_145881_a().setEntityName(entityname);
+		;
+		return this.getSpawnerStack(spawner);
 	}
 	
 	public static TileEntityMobSpawner defaultSpawner(TileEntityMobSpawner spawner)
 	{
 		if (spawner != null)
 		{
-			spawner.getSpawnerLogic().spawnDelay = 0;
+			spawner.func_145881_a().spawnDelay = 0;
 			spawner.xCoord = 0;
 			spawner.yCoord = 0;
 			spawner.zCoord = 0;

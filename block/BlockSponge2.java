@@ -7,11 +7,6 @@ import net.minecraft.world.World;
 
 public class BlockSponge2 extends BlockSponge
 {
-	public BlockSponge2(int blockID)
-	{
-		super(blockID);
-	}
-	
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
@@ -20,9 +15,9 @@ public class BlockSponge2 extends BlockSponge
 	}
 	
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int side)
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighborBlock)
 	{
-		super.onNeighborBlockChange(world, x, y, z, side);
+		super.onNeighborBlockChange(world, x, y, z, neighborBlock);
 		this.replaceWater(world, x, y, z);
 	}
 	
@@ -36,10 +31,15 @@ public class BlockSponge2 extends BlockSponge
 				{
 					for (int z1 = z - 2; z1 <= z + 2; z1++)
 					{
-						int blockID = world.getBlockId(x1, y1, z1);
-						Block block = Block.blocksList[blockID];
-						if (block != null && (block.blockMaterial.isLiquid() || block.blockMaterial == Material.water || block.blockMaterial == Material.lava))
-							world.setBlock(x1, y1, z1, 0, 0, 2);
+						Block block = world.getBlock(x1, y1, z1);
+						if (block != null)
+						{
+							Material material = block.getMaterial();
+							if (material.isLiquid())
+							{
+								world.setBlockToAir(x1, y1, z1);
+							}
+						}
 					}
 				}
 			}

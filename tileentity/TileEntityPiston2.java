@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityPiston;
@@ -26,44 +24,25 @@ public class TileEntityPiston2 extends TileEntityPiston
 	
 	public List			pushedObjects		= new ArrayList();
 	
-	public TileEntityPiston2()
+	public TileEntityPiston2(Block block, int blockMetadata, TileEntity tileEntity, int orientation, boolean extending, boolean renderHead)
 	{
-	}
-	
-	public TileEntityPiston2(int blockID, int blockMetadata, TileEntity tileEntity, int orientation, boolean extending, boolean renderHead)
-	{
-		super(blockID, blockMetadata, orientation, extending, renderHead);
+		super(block, blockMetadata, orientation, extending, renderHead);
 		this.storedBlockMetadata = blockMetadata;
 		this.storedTileEntity = tileEntity;
 	}
 	
-	/**
-	 * Get interpolated progress value (between lastProgress and progress) given
-	 * the fractional time between ticks as an argument.
-	 */
-	@Override
-	public float getProgress(float time)
-	{
-		if (time > 1.0F)
-		{
-			time = 1.0F;
-		}
-		
-		return this.lastProgress + (this.progress - this.lastProgress) * time;
-	}
-	
-	private void updatePushedObjects(float par1, float par2)
+	private void updatePushedObjects(float progress, float delta)
 	{
 		if (this.isExtending())
 		{
-			par1 = 1.0F - par1;
+			progress = 1.0F - progress;
 		}
 		else
 		{
-			--par1;
+			--progress;
 		}
 		
-		AxisAlignedBB axisalignedbb = Block.pistonMoving.getAxisAlignedBB(this.worldObj, this.xCoord, this.yCoord, this.zCoord, this.getStoredBlockID(), par1, this.getPistonOrientation());
+		AxisAlignedBB axisalignedbb = Blocks.piston_extension.func_149964_a(this.worldObj, this.xCoord, this.yCoord, this.zCoord, this.getStoredBlockID(), progress, this.getPistonOrientation());
 		
 		if (axisalignedbb != null)
 		{
@@ -77,33 +56,12 @@ public class TileEntityPiston2 extends TileEntityPiston
 				while (iterator.hasNext())
 				{
 					Entity entity = (Entity) iterator.next();
-					entity.moveEntity(par2 * Facing.offsetsXForSide[this.getPistonOrientation()], par2 * Facing.offsetsYForSide[this.getPistonOrientation()], par2 * Facing.offsetsZForSide[this.getPistonOrientation()]);
+					entity.moveEntity(delta * Facing.offsetsXForSide[this.getPistonOrientation()], delta * Facing.offsetsYForSide[this.getPistonOrientation()], delta * Facing.offsetsZForSide[this.getPistonOrientation()]);
 				}
 				
 				this.pushedObjects.clear();
 			}
 		}
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public float getOffsetX(float par1)
-	{
-		return this.isExtending() ? (this.getProgress(par1) - 1.0F) * Facing.offsetsXForSide[this.getPistonOrientation()] : (1.0F - this.getProgress(par1)) * Facing.offsetsXForSide[this.getPistonOrientation()];
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public float getOffsetY(float par1)
-	{
-		return this.isExtending() ? (this.getProgress(par1) - 1.0F) * Facing.offsetsYForSide[this.getPistonOrientation()] : (1.0F - this.getProgress(par1)) * Facing.offsetsYForSide[this.getPistonOrientation()];
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public float getOffsetZ(float par1)
-	{
-		return this.isExtending() ? (this.getProgress(par1) - 1.0F) * Facing.offsetsZForSide[this.getPistonOrientation()] : (1.0F - this.getProgress(par1)) * Facing.offsetsZForSide[this.getPistonOrientation()];
 	}
 	
 	/**
@@ -154,20 +112,20 @@ public class TileEntityPiston2 extends TileEntityPiston
 	{
 		if (!this.worldObj.isRemote)
 		{
-			this.worldObj.removeBlockTileEntity(this.xCoord, this.yCoord, this.zCoord);
+			this.worldObj.removeTileEntity(this.xCoord, this.yCoord, this.zCoord);
 			this.invalidate();
 			
-			if (this.worldObj.getBlockId(this.xCoord, this.yCoord, this.zCoord) == Block.pistonMoving.blockID)
+			if (this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord) == Blocks.piston_extension)
 			{
 				this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, this.getStoredBlockID(), this.storedBlockMetadata, 3);
 				
 				if (this.storedTileEntity != null)
 				{
-					this.storedTileEntity.blockType = Block.blocksList[this.getStoredBlockID()];
+					this.storedTileEntity.blockType = this.getStoredBlockID();
 					this.storedTileEntity.blockMetadata = this.storedBlockMetadata;
 					this.storedTileEntity.validate();
 					
-					this.worldObj.setBlockTileEntity(this.xCoord, this.yCoord, this.zCoord, this.storedTileEntity);
+					this.worldObj.setTileEntity(this.xCoord, this.yCoord, this.zCoord, this.storedTileEntity);
 				}
 				
 				this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, this.storedBlockMetadata, 3);
@@ -177,9 +135,6 @@ public class TileEntityPiston2 extends TileEntityPiston
 		}
 	}
 	
-	/**
-	 * Reads a tile entity from NBT.
-	 */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -188,18 +143,15 @@ public class TileEntityPiston2 extends TileEntityPiston
 		if (nbt.hasKey("TileEntity"))
 		{
 			NBTTagCompound tileEntity = nbt.getCompoundTag("TileEntity");
-			if (tileEntity.hasNoTags())
-				this.storedTileEntity = this;
-			else
-				this.storedTileEntity = TileEntity.createAndLoadEntity(tileEntity);
+			if (tileEntity.hasNoTags()) {
+				this.storedTileEntity = this;}
+			else {
+				this.storedTileEntity = TileEntity.createAndLoadEntity(tileEntity);}
 		}
-		else
-			this.storedTileEntity = null;
+		else {
+			this.storedTileEntity = null;}
 	}
 	
-	/**
-	 * Writes a tile entity to NBT.
-	 */
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
@@ -208,9 +160,9 @@ public class TileEntityPiston2 extends TileEntityPiston
 		if (this.storedTileEntity != null)
 		{
 			NBTTagCompound tileEntity = new NBTTagCompound();
-			if (this.storedTileEntity != this)
-				this.storedTileEntity.writeToNBT(tileEntity);
-			nbt.setCompoundTag("TileEntity", tileEntity);
+			if (this.storedTileEntity != this) {
+				this.storedTileEntity.writeToNBT(tileEntity);}
+			nbt.setTag("TileEntity", tileEntity);
 		}
 	}
 }
