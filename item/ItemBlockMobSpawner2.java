@@ -20,7 +20,7 @@ public class ItemBlockMobSpawner2 extends ItemBlock
 	{
 		super(block);
 	}
-
+	
 	public static TileEntityMobSpawner getSpawner(ItemStack stack)
 	{
 		TileEntityMobSpawner spawner = new TileEntityMobSpawner();

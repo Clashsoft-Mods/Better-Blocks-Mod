@@ -143,13 +143,19 @@ public class TileEntityPiston2 extends TileEntityPiston
 		if (nbt.hasKey("TileEntity"))
 		{
 			NBTTagCompound tileEntity = nbt.getCompoundTag("TileEntity");
-			if (tileEntity.hasNoTags()) {
-				this.storedTileEntity = this;}
-			else {
-				this.storedTileEntity = TileEntity.createAndLoadEntity(tileEntity);}
+			if (tileEntity.hasNoTags())
+			{
+				this.storedTileEntity = this;
+			}
+			else
+			{
+				this.storedTileEntity = TileEntity.createAndLoadEntity(tileEntity);
+			}
 		}
-		else {
-			this.storedTileEntity = null;}
+		else
+		{
+			this.storedTileEntity = null;
+		}
 	}
 	
 	@Override
@@ -160,8 +166,10 @@ public class TileEntityPiston2 extends TileEntityPiston
 		if (this.storedTileEntity != null)
 		{
 			NBTTagCompound tileEntity = new NBTTagCompound();
-			if (this.storedTileEntity != this) {
-				this.storedTileEntity.writeToNBT(tileEntity);}
+			if (this.storedTileEntity != this)
+			{
+				this.storedTileEntity.writeToNBT(tileEntity);
+			}
 			nbt.setTag("TileEntity", tileEntity);
 		}
 	}

@@ -31,10 +31,14 @@ public class BlockPistonBase2 extends BlockPistonBase
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
 		super.registerBlockIcons(iconRegister);
-		if (isSticky) {
-			Blocks.sticky_piston.registerBlockIcons(iconRegister);}
-		else {
-			Blocks.piston.registerBlockIcons(iconRegister);}
+		if (this.isSticky)
+		{
+			Blocks.sticky_piston.registerBlockIcons(iconRegister);
+		}
+		else
+		{
+			Blocks.piston.registerBlockIcons(iconRegister);
+		}
 	}
 	
 	@Override
@@ -78,7 +82,7 @@ public class BlockPistonBase2 extends BlockPistonBase
 			
 			if (flag && !isExtended(metadata))
 			{
-				if (canExtend(world, x, y, z, orientation))
+				if (this.canExtend(world, x, y, z, orientation))
 				{
 					world.addBlockEvent(x, y, z, this, 0, orientation);
 				}
@@ -167,7 +171,7 @@ public class BlockPistonBase2 extends BlockPistonBase
 					}
 				}
 				
-				if (!flag1 && canPushBlock(block, world, x1, y1, z1, false) && (block.getMobilityFlag() == 0 || block == Blocks.piston || block == Blocks.sticky_piston))
+				if (!flag1 && this.canPushBlock(block, world, x1, y1, z1, false) && (block.getMobilityFlag() == 0 || block == Blocks.piston || block == Blocks.sticky_piston))
 				{
 					x += Facing.offsetsXForSide[direction];
 					y += Facing.offsetsYForSide[direction];
@@ -253,7 +257,7 @@ public class BlockPistonBase2 extends BlockPistonBase
 				
 				if (!world.isAirBlock(i1, j1, k1))
 				{
-					if (!canPushBlock(block, world, i1, j1, k1, true))
+					if (!this.canPushBlock(block, world, i1, j1, k1, true))
 					{
 						return false;
 					}
@@ -298,7 +302,7 @@ public class BlockPistonBase2 extends BlockPistonBase
 				
 				if (!world.isAirBlock(x0, y0, z0))
 				{
-					if (!canPushBlock(block, world, x0, y0, z0, true))
+					if (!this.canPushBlock(block, world, x0, y0, z0, true))
 					{
 						return false;
 					}
