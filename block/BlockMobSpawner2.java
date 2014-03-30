@@ -136,7 +136,6 @@ public class BlockMobSpawner2 extends BlockMobSpawner
 	{
 		TileEntityMobSpawner spawner = new TileEntityMobSpawner();
 		spawner.func_145881_a().setEntityName(entityname);
-		;
 		return this.getSpawnerStack(spawner);
 	}
 	

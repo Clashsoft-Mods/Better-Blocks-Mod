@@ -1,13 +1,10 @@
 package clashsoft.mods.betterblocks.block;
 
 import clashsoft.mods.betterblocks.tileentity.TileEntityPiston2;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.BlockSnow;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -24,21 +21,6 @@ public class BlockPistonBase2 extends BlockPistonBase
 	{
 		super(isSticky);
 		this.isSticky = isSticky;
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister)
-	{
-		super.registerBlockIcons(iconRegister);
-		if (this.isSticky)
-		{
-			Blocks.sticky_piston.registerBlockIcons(iconRegister);
-		}
-		else
-		{
-			Blocks.piston.registerBlockIcons(iconRegister);
-		}
 	}
 	
 	@Override

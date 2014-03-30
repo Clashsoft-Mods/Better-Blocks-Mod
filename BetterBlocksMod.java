@@ -7,7 +7,6 @@ import clashsoft.mods.betterblocks.block.BlockMobSpawner2;
 import clashsoft.mods.betterblocks.block.BlockPistonBase2;
 import clashsoft.mods.betterblocks.block.BlockSponge2;
 import clashsoft.mods.betterblocks.common.BBCommonProxy;
-import clashsoft.mods.betterblocks.item.ItemBlockMobSpawner2;
 import clashsoft.mods.betterblocks.tileentity.TileEntityPiston2;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -55,6 +54,17 @@ public class BetterBlocksMod
 		spawnerCrafting = CSConfig.getBool("Spawners", "Crafting", true);
 		
 		CSConfig.saveConfig();
+		
+		spawner2 = (BlockMobSpawner2) new BlockMobSpawner2().setBlockName("mob_spawner").setBlockTextureName("mob_spawner").setHardness(5.0F).setStepSound(Block.soundTypeMetal).setCreativeTab(CreativeTabs.tabBlock);
+		spawner2.setHarvestLevel("pickaxe", 2);
+		piston2 = (BlockPistonBase2) new BlockPistonBase2(false).setBlockName("pistonBase");
+		stickyPiston2 = (BlockPistonBase2) new BlockPistonBase2(true).setBlockName("pistonStickyBase");
+		sponge2 = (BlockSponge2) new BlockSponge2().setBlockName("sponge").setBlockTextureName("sponge").setHardness(0.6F).setStepSound(Block.soundTypeGrass);
+		
+		CSBlocks.replaceBlock(Blocks.mob_spawner, spawner2);
+		CSBlocks.replaceBlock(Blocks.piston, piston2);
+		CSBlocks.replaceBlock(Blocks.sticky_piston, stickyPiston2);
+		CSBlocks.replaceBlock(Blocks.sponge, sponge2);
 	}
 	
 	@EventHandler
@@ -62,24 +72,13 @@ public class BetterBlocksMod
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
 		
-		spawner2 = (BlockMobSpawner2) new BlockMobSpawner2().setBlockName("mob_spawner").setBlockTextureName("mob_spawner").setHardness(5.0F).setStepSound(Block.soundTypeMetal).setCreativeTab(CreativeTabs.tabBlock);
-		spawner2.setHarvestLevel("pickaxe", 2);
-		CSBlocks.overrideBlock(spawner2, ItemBlockMobSpawner2.class, "mob_spawner");
-		
-		piston2 = (BlockPistonBase2) new BlockPistonBase2(false).setBlockName("pistonBase");
-		CSBlocks.overrideBlock(piston2, "piston");
-		
-		stickyPiston2 = (BlockPistonBase2) new BlockPistonBase2(true).setBlockName("pistonStickyBase");
-		CSBlocks.overrideBlock(stickyPiston2, "sticky_piston");
-		
-		sponge2 = (BlockSponge2) new BlockSponge2().setBlockName("sponge").setBlockTextureName("sponge").setHardness(0.6F).setStepSound(Block.soundTypeGrass);
-		
 		GameRegistry.registerTileEntity(TileEntityPiston2.class, "Piston2");
 		
-		if (spawnerCrafting)
-			this.addSpawnerRecipes();
-		
 		GameRegistry.addRecipe(new ItemStack(sponge2), "wsw", "sws", "wsw", 'w', new ItemStack(Blocks.wool, 1, 4), 's', Items.string);
+		if (spawnerCrafting)
+		{
+			this.addSpawnerRecipes();
+		}
 	}
 	
 	public void addSpawnerRecipes()
