@@ -1,5 +1,7 @@
 package clashsoft.mods.betterblocks;
 
+import clashsoft.cslib.minecraft.CSLib;
+import clashsoft.cslib.minecraft.ClashsoftMod;
 import clashsoft.cslib.minecraft.block.CSBlocks;
 import clashsoft.cslib.minecraft.update.CSUpdate;
 import clashsoft.cslib.minecraft.util.CSConfig;
@@ -13,6 +15,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -25,13 +28,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-@Mod(modid = BetterBlocksMod.MODID, name = BetterBlocksMod.NAME, version = BetterBlocksMod.VERSION)
-public class BetterBlocksMod
+@Mod(modid = BetterBlocksMod.MODID, name = BetterBlocksMod.NAME, version = BetterBlocksMod.VERSION, dependencies = BetterBlocksMod.DEPENDENCIES)
+public class BetterBlocksMod extends ClashsoftMod
 {
 	public static final String		MODID			= "betterblocks";
 	public static final String		NAME			= "Better Blocks Mod";
-	public static final int			REVISION		= 0;
-	public static final String		VERSION			= CSUpdate.CURRENT_VERSION + "-" + REVISION;
+	public static final String		ACRONYM			= "bbm";
+	public static final String		VERSION			= CSUpdate.CURRENT_VERSION + "-1.0.0";
+	public static final String		DEPENDENCIES	= CSLib.DEPENDENCY;
 	
 	@Instance(MODID)
 	public static BetterBlocksMod	instance;
@@ -46,14 +50,24 @@ public class BetterBlocksMod
 	public static BlockPistonBase2	stickyPiston2;
 	public static BlockSponge2		sponge2;
 	
+	public BetterBlocksMod()
+	{
+		super(MODID, NAME, ACRONYM, VERSION);
+		this.hasConfig = true;
+		this.url = "https://github.com/Clashsoft/Better-Blocks-Mod/wiki/";
+	}
+	
+	@Override
+	public void readConfig()
+	{
+		spawnerCrafting = CSConfig.getBool("spawners", "Crafting", true);
+	}
+	
+	@Override
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		CSConfig.loadConfig(event.getSuggestedConfigurationFile(), NAME);
-		
-		spawnerCrafting = CSConfig.getBool("Spawners", "Crafting", true);
-		
-		CSConfig.saveConfig();
+		super.preInit(event);
 		
 		spawner2 = (BlockMobSpawner2) new BlockMobSpawner2().setBlockName("mob_spawner").setBlockTextureName("mob_spawner").setHardness(5.0F).setStepSound(Block.soundTypeMetal).setCreativeTab(CreativeTabs.tabBlock);
 		spawner2.setHarvestLevel("pickaxe", 2);
@@ -67,9 +81,12 @@ public class BetterBlocksMod
 		CSBlocks.replaceBlock(Blocks.sponge, sponge2);
 	}
 	
+	@Override
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		super.init(event);
+		
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
 		
 		GameRegistry.registerTileEntity(TileEntityPiston2.class, "Piston2");
@@ -79,6 +96,13 @@ public class BetterBlocksMod
 		{
 			this.addSpawnerRecipes();
 		}
+	}
+	
+	@Override
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event)
+	{
+		super.postInit(event);
 	}
 	
 	public void addSpawnerRecipes()
