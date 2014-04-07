@@ -8,7 +8,7 @@ import clashsoft.cslib.minecraft.util.CSConfig;
 import clashsoft.mods.betterblocks.block.BlockMobSpawner2;
 import clashsoft.mods.betterblocks.block.BlockPistonBase2;
 import clashsoft.mods.betterblocks.block.BlockSponge2;
-import clashsoft.mods.betterblocks.common.BBCommonProxy;
+import clashsoft.mods.betterblocks.common.BBProxy;
 import clashsoft.mods.betterblocks.tileentity.TileEntityPiston2;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -17,7 +17,6 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 import net.minecraft.block.Block;
@@ -40,8 +39,8 @@ public class BetterBlocksMod extends ClashsoftMod
 	@Instance(MODID)
 	public static BetterBlocksMod	instance;
 	
-	@SidedProxy(clientSide = "clashsoft.mods.betterblocks.client.BBClientProxy", serverSide = "clashsoft.mods.betterblocks.common.BBCommonProxy")
-	public static BBCommonProxy		proxy;
+	@SidedProxy(clientSide = "clashsoft.mods.betterblocks.client.BBClientProxy", serverSide = "clashsoft.mods.betterblocks.common.BBProxy")
+	public static BBProxy			proxy;
 	
 	public static boolean			spawnerCrafting	= true;
 	
@@ -52,7 +51,7 @@ public class BetterBlocksMod extends ClashsoftMod
 	
 	public BetterBlocksMod()
 	{
-		super(MODID, NAME, ACRONYM, VERSION);
+		super(proxy, MODID, NAME, ACRONYM, VERSION);
 		this.hasConfig = true;
 		this.url = "https://github.com/Clashsoft/Better-Blocks-Mod/wiki/";
 	}
@@ -86,8 +85,6 @@ public class BetterBlocksMod extends ClashsoftMod
 	public void init(FMLInitializationEvent event)
 	{
 		super.init(event);
-		
-		NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
 		
 		GameRegistry.registerTileEntity(TileEntityPiston2.class, "Piston2");
 		

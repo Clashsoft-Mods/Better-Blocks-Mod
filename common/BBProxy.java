@@ -1,22 +1,15 @@
 package clashsoft.mods.betterblocks.common;
 
-import cpw.mods.fml.common.network.IGuiHandler;
+import clashsoft.cslib.minecraft.common.BaseProxy;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class BBCommonProxy implements IGuiHandler
+public class BBProxy extends BaseProxy
 {
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		return null;
 	}
-	
-	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-	{
-		return null;
-	}
-	
 }
