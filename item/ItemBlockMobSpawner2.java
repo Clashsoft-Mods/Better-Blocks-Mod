@@ -27,9 +27,9 @@ public class ItemBlockMobSpawner2 extends ItemBlock
 		if (stack != null && stack.hasTagCompound())
 		{
 			spawner.readFromNBT(stack.getTagCompound());
+			BlockMobSpawner2.defaultSpawner(spawner);
+			spawner.writeToNBT(stack.getTagCompound());
 		}
-		BlockMobSpawner2.defaultSpawner(spawner);
-		spawner.writeToNBT(stack.getTagCompound());
 		return spawner;
 	}
 	
