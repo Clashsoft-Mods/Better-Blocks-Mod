@@ -68,13 +68,14 @@ public class BetterBlocksMod extends ClashsoftMod
 	{
 		super.preInit(event);
 		
-		spawner2 = (BlockMobSpawner2) new BlockMobSpawner2().setBlockName("mob_spawner").setBlockTextureName("mob_spawner").setHardness(5.0F).setStepSound(Block.soundTypeMetal).setCreativeTab(CreativeTabs.tabBlock);
+		spawner2 = (BlockMobSpawner2) new BlockMobSpawner2().setBlockName("mobSpawner").setBlockTextureName("mob_spawner").setHardness(5.0F).setStepSound(Block.soundTypeMetal).setCreativeTab(CreativeTabs.tabBlock);
 		spawner2.setHarvestLevel("pickaxe", 2);
 		piston2 = (BlockPistonBase2) new BlockPistonBase2(false).setBlockName("pistonBase");
 		stickyPiston2 = (BlockPistonBase2) new BlockPistonBase2(true).setBlockName("pistonStickyBase");
 		sponge2 = (BlockSponge2) new BlockSponge2().setBlockName("sponge").setBlockTextureName("sponge").setHardness(0.6F).setStepSound(Block.soundTypeGrass);
 		
 		CSBlocks.replaceBlock(Blocks.mob_spawner, spawner2);
+		
 		CSBlocks.replaceBlock(Blocks.piston, piston2);
 		CSBlocks.replaceBlock(Blocks.sticky_piston, stickyPiston2);
 		CSBlocks.replaceBlock(Blocks.sponge, sponge2);

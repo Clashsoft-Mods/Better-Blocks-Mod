@@ -122,14 +122,17 @@ public class BlockMobSpawner2 extends BlockMobSpawner
 	
 	public ItemStack getSpawnerStack(TileEntityMobSpawner spawner)
 	{
-		ItemStack itemstack = new ItemStack(this, 1, 0);
+		ItemStack stack = new ItemStack(this, 1, 0);
+		NBTTagCompound nbt = stack.getTagCompound();
+		if (nbt == null)
+		{
+			nbt = new NBTTagCompound();
+			stack.setTagCompound(nbt);
+		}
+		defaultSpawner(spawner);
+		spawner.writeToNBT(nbt);
 		
-		if (itemstack.getTagCompound() == null)
-			itemstack.setTagCompound(new NBTTagCompound());
-		spawner = defaultSpawner(spawner);
-		spawner.writeToNBT(itemstack.getTagCompound());
-		
-		return itemstack;
+		return stack;
 	}
 	
 	public ItemStack getSpawnerStack(String entityname)

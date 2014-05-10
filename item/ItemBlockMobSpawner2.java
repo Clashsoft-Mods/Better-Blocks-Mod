@@ -42,7 +42,6 @@ public class ItemBlockMobSpawner2 extends ItemBlock
 		{
 			MobSpawnerBaseLogic logic = spawner.func_145881_a();
 			
-			String italic = "" + EnumChatFormatting.ITALIC;
 			list.add("Entity: " + EnumChatFormatting.ITALIC + I18n.getString("entity." + logic.getEntityNameToSpawn() + ".name"));
 			
 			if (flag)
