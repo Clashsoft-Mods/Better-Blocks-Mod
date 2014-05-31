@@ -1,10 +1,10 @@
 package clashsoft.mods.betterblocks;
 
+import clashsoft.cslib.config.CSConfig;
 import clashsoft.cslib.minecraft.block.CSBlocks;
 import clashsoft.cslib.minecraft.init.CSLib;
 import clashsoft.cslib.minecraft.init.ClashsoftMod;
 import clashsoft.cslib.minecraft.update.CSUpdate;
-import clashsoft.cslib.minecraft.util.CSConfig;
 import clashsoft.mods.betterblocks.block.BlockMobSpawner2;
 import clashsoft.mods.betterblocks.block.BlockPistonBase2;
 import clashsoft.mods.betterblocks.block.BlockSponge2;
