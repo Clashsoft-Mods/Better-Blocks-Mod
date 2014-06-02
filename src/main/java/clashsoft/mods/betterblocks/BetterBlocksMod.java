@@ -13,7 +13,6 @@ import clashsoft.mods.betterblocks.tileentity.TileEntityPiston2;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -39,8 +38,7 @@ public class BetterBlocksMod extends ClashsoftMod
 	@Instance(MODID)
 	public static BetterBlocksMod	instance;
 	
-	@SidedProxy(clientSide = "clashsoft.mods.betterblocks.client.BBClientProxy", serverSide = "clashsoft.mods.betterblocks.common.BBProxy")
-	public static BBProxy			proxy;
+	public static BBProxy			proxy			= createProxy("clashsoft.mods.betterblocks.client.BBClientProxy", "clashsoft.mods.betterblocks.common.BBProxy");
 	
 	public static boolean			spawnerCrafting	= true;
 	
@@ -146,15 +144,6 @@ public class BetterBlocksMod extends ClashsoftMod
 	
 	public static void addSpawnerRecipe(String entity, ItemStack entityItem)
 	{
-		GameRegistry.addRecipe(spawner2.getSpawnerStack(entity), new Object[] {
-				"dId",
-				"I#I",
-				"dId",
-				'd',
-				Blocks.obsidian,
-				'I',
-				Blocks.iron_bars,
-				'#',
-				entityItem });
+		GameRegistry.addRecipe(spawner2.getSpawnerStack(entity), new Object[] { "dId", "I#I", "dId", 'd', Blocks.obsidian, 'I', Blocks.iron_bars, '#', entityItem });
 	}
 }
